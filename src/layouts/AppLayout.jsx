@@ -2,7 +2,7 @@ import { CalendarDays, ClipboardList, LayoutDashboard, LogOut, Moon, Ticket, Use
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { logout, selectCurrentUser } from "../features/auth/authSlice";
+import { logoutUser, selectCurrentUser } from "../features/auth/authSlice";
 import { toggleTheme } from "../features/theme/themeSlice";
 import EventSphereBackdrop from "../components/EventSphereBackdrop";
 import { Button } from "../components/ui";
@@ -24,7 +24,7 @@ const AppLayout = () => {
   const navItems = baseNav.filter((item) => !item.roles || item.roles.includes(user?.role));
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logoutUser());
     navigate("/");
   };
 

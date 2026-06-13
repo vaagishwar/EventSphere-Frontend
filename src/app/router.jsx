@@ -1,5 +1,6 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 
+import GuestRoute from "../components/GuestRoute";
 import ProtectedRoute from "../components/ProtectedRoute";
 import RouteErrorBoundary from "../components/RouteErrorBoundary";
 import AppLayout from "../layouts/AppLayout";
@@ -27,11 +28,16 @@ export const router = createBrowserRouter([
     errorElement: <RouteErrorBoundary />,
     children: [
       { path: "/", element: <LandingPage /> },
-      { path: "/login", element: <LoginPage /> },
-      { path: "/register", element: <RegisterPage /> },
-      { path: "/verify-otp", element: <OtpPage /> },
-      { path: "/forgot-password", element: <ForgotPasswordPage /> },
-      { path: "/reset-password", element: <ResetPasswordPage /> },
+      {
+        element: <GuestRoute />,
+        children: [
+          { path: "/login", element: <LoginPage /> },
+          { path: "/register", element: <RegisterPage /> },
+          { path: "/verify-otp", element: <OtpPage /> },
+          { path: "/forgot-password", element: <ForgotPasswordPage /> },
+          { path: "/reset-password", element: <ResetPasswordPage /> },
+        ],
+      },
     ],
   },
   {
@@ -66,5 +72,5 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  { path: "*", element: <NotFoundPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "*", element: <Navigate to="/" replace />, errorElement: <RouteErrorBoundary /> },
 ]);

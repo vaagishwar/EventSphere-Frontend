@@ -73,13 +73,27 @@ export const loadCurrentUser = createAsyncThunk(
   "auth/loadCurrentUser",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await authService.me();
+      const response = await authService.me({ skipErrorToast: true });
       const user = getApiPayload(response).user;
       persistSession({ user });
       return user;
     } catch (error) {
       clearSession();
       return rejectWithValue(getRejectMessage(error, "Session expired"));
+    }
+  },
+);
+
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      await authService.logout();
+      notify.api.info("Signed out");
+      return null;
+    } catch (error) {
+      notify.api.info("Signed out");
+      return null;
     }
   },
 );
@@ -156,6 +170,14 @@ const authSlice = createSlice({
         state.token = null;
         state.error = action.payload;
       })
+      .addCase(logoutUser.fulfilled, (state) => {
+        clearSession();
+        state.user = null;
+        state.token = null;
+        state.status = "failed";
+        state.actionStatus = "succeeded";
+        state.error = null;
+      })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.actionStatus = "succeeded";
         state.user = action.payload.user;
@@ -212,5 +234,5 @@ const authSlice = createSlice({
 export const { logout, setPendingEmail, setUser } = authSlice.actions;
 export const selectAuth = (state) => state.auth;
 export const selectCurrentUser = (state) => state.auth.user;
-export const selectIsAuthenticated = (state) => Boolean(state.auth.token);
+export const selectIsAuthenticated = (state) => Boolean(state.auth.user);
 export default authSlice.reducer;
