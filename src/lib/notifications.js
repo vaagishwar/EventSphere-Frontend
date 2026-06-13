@@ -4,7 +4,7 @@ export const notify = {
   auth: {
     loginSuccess: () => successToast("Login Success"),
     loginFailed: () => errorToast("Login Failed"),
-    registrationSuccess: () => successToast("Registration Success"),
+    registrationSuccess: () => successToast("Verification OTP sent to your email"),
     registrationFailed: () => errorToast("Registration Failed"),
     otpVerified: () => successToast("OTP Verified"),
     otpInvalid: () => errorToast("OTP Invalid"),

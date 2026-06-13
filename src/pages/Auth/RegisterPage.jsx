@@ -14,9 +14,11 @@ const RegisterPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const result = await dispatch(registerUser(form));
-    if (registerUser.fulfilled.match(result)) {
+    try {
+      await dispatch(registerUser(form)).unwrap();
       navigate(`/verify-otp?email=${encodeURIComponent(form.email)}`);
+    } catch {
+      // Handled by thunk and axios interceptors
     }
   };
 
